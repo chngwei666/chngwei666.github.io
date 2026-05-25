@@ -30,39 +30,17 @@
 <div class="container" id="meme-container"></div>
 
 <script>
-    // 這裡放入最新的精選梗圖連結
     const memeData = [
         {
-            title: "您的 TikTok 精選",
+            title: "今日精選梗圖",
             imgUrl: "https://p16-comment-sign-sg.tiktokcdn.com/tos-alisg-i-zt8igodiya-sg/8fdc61dd7228454eb217a9a5caf035b5~tplv-jj85edgx6n-image-medium.jpeg?dr=8569&refresh_token=bf361e5c&x-expires=1782306000&x-signature=VgVuUcOf07ra4beC7OuYpIexTeA%3D&t=67a6c45e&ps=a0626fcd&shp=ff37627b&shcp=ff37627b&idc=my",
             heat: 2850
         },
         {
-            title: "經典：這就是生活 (This is fine)",
-            imgUrl: "https://i.imgur.com/k4O7214.png",
-            heat: 4500
-        },
-        {
-            title: "當週上班族心聲",
-            imgUrl: "https://i.imgur.com/O6L8XhW.jpeg",
-            heat: 3200
+            title: "最新網路梗圖",
+            imgUrl: "https://i.imgur.com/W4XdfyR_d.webp?maxwidth=520&shape=thumb&fidelity=high",
+            heat: 2100
         }
     ];
 
-    const container = document.getElementById('meme-container');
-    memeData.forEach((item) => {
-        container.innerHTML += `
-            <div class="meme-card">
-                <img src="${item.imgUrl}" class="meme-img" alt="${item.title}">
-                <div class="content-area">
-                    <h3>${item.title}</h3>
-                    <p>目前熱度: ${item.heat} 🔥</p>
-                    <button class="vote-btn" onclick="alert('感謝你的認同！')">UPVOTE THIS MASTERPIECE</button>
-                </div>
-            </div>
-        `;
-    });
-</script>
-
-</body>
-</html>
+    const container = document
