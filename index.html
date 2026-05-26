@@ -2,33 +2,33 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meme Hub | 全球頂尖迷因排行榜、即時分析與梗圖生成</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Meme Dodge PRO | 終極排行榜版</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <link id="dynamic-favicon" rel="icon" type="image/png" href="https://api.iconify.design/twemoji:face-with-tears-of-joy.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;900&family=Noto+Sans+TC:wght@700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-base: #0a0a0f;
-            --bg-surface: rgba(18, 18, 26, 0.65);
-            --bg-card-hover: rgba(26, 26, 38, 0.85);
-            --border-subtle: rgba(255, 255, 255, 0.07);
-            --brand-primary: linear-gradient(135deg, #ff3366 0%, #ff5e3a 100%);
-            --brand-success: #00e676;
+            --bg-base: #050508;
+            --bg-surface: rgba(13, 13, 23, 0.85);
+            --brand-cyber: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --brand-danger: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+            --brand-warn: #ffca28;
+            --brand-gold: #ffd700;
+            --brand-silver: #c0c0c0;
+            --brand-bronze: #cd7f32;
             --text-primary: #f5f5f7;
-            --text-secondary: #9a9aae;
-            --shadow-luxury: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+            --text-secondary: #7e7e9a;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         body { 
@@ -38,797 +38,668 @@
             display: flex; 
             flex-direction: column; 
             align-items: center;
+            justify-content: center;
             min-height: 100vh;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            position: relative;
-        }
-
-        .ambient-glow {
-            position: fixed;
-            top: -250px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 1000px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(255, 51, 102, 0.15) 0%, rgba(255, 94, 58, 0.05) 45%, transparent 70%);
-            z-index: -1;
-            pointer-events: none;
-            filter: blur(40px);
-        }
-
-        header { 
-            padding: 90px 0 45px 0; 
-            text-align: center; 
-            max-width: 640px;
-            width: 90%;
-            animation: fadeInDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        header .badge {
-            background: rgba(255, 51, 102, 0.12);
-            color: #ff4375;
-            padding: 6px 16px;
-            border-radius: 100px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            display: inline-block;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 51, 102, 0.25);
-        }
-
-        header h1 {
-            font-size: 3.5rem;
-            font-weight: 900;
-            letter-spacing: -2px;
-            margin-bottom: 16px;
-            background: linear-gradient(180deg, #ffffff 30%, #b4b4bf 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        header p {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .container { 
-            max-width: 640px; 
-            width: 92%; 
-            padding-bottom: 100px;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 50px;
-            margin-bottom: 25px;
-            color: var(--text-primary);
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-        }
-
-        .section-header i { 
-            background: var(--brand-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* 迷因與分析卡片 */
-        .meme-card, .analytics-card, .generator-card { 
-            position: relative;
-            background: var(--bg-surface); 
-            backdrop-filter: blur(25px); 
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--border-subtle); 
-            border-radius: 28px; 
-            padding: 28px; 
-            margin-bottom: 35px; 
-            box-shadow: var(--shadow-luxury);
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .meme-card:hover {
-            transform: translateY(-6px) scale(1.01);
-            background: var(--bg-card-hover);
-            border-color: rgba(255, 255, 255, 0.18);
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 51, 102, 0.1);
-        }
-
-        .rank-tag {
-            position: absolute;
-            top: 24px;
-            left: 24px;
-            background: rgba(10, 10, 15, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.15);
-            padding: 6px 16px;
-            border-radius: 100px;
-            font-size: 0.8rem;
-            font-weight: 800;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .meme-viewport {
-            width: 100%;
-            border-radius: 20px;
             overflow: hidden;
-            margin-bottom: 24px;
-            background: #0f0f14;
-            aspect-ratio: 16 / 12;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid rgba(255,255,255,0.03);
-        }
-
-        .meme-img { 
-            width: 100%; 
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .meme-card:hover .meme-img {
-            transform: scale(1.03);
-        }
-
-        .content-meta h3 {
-            font-size: 1.4rem;
-            font-weight: 800;
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
-            line-height: 1.4;
-        }
-
-        .status-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 18px;
-            background: rgba(255,255,255,0.02);
-            padding: 12px 16px;
-            border-radius: 14px;
-            border: 1px solid rgba(255,255,255,0.04);
-        }
-
-        .heat-indicator {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .heat-indicator strong { color: var(--text-primary); }
-        .heat-count {
-            color: #ff3366;
-            font-weight: 900;
-            font-size: 1.1rem;
-        }
-
-        /* 內嵌迷你趨勢圖線條樣式 */
-        .mini-trend-box {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 16px;
-            padding: 14px 18px;
-            margin-bottom: 22px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-        }
-        .mini-trend-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        .mini-trend-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-        .mini-trend-status {
-            font-size: 0.85rem;
-            font-weight: 800;
-        }
-        .mini-svg-container {
-            flex: 1;
-            max-width: 160px;
-            height: 32px;
-        }
-
-        /* 按鈕互動系統 */
-        .btn {
-            border: none;
-            border-radius: 16px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
         }
 
-        .btn-primary { 
-            background: var(--brand-primary); 
-            color: white; 
-            padding: 18px 32px; 
-            box-shadow: 0 8px 24px rgba(255, 51, 102, 0.3);
+        .ad-banner {
             width: 100%;
-        }
-
-        .btn-primary:hover:not(:disabled) { 
-            box-shadow: 0 12px 32px rgba(255, 51, 102, 0.5);
-            transform: translateY(-2px);
-        }
-
-        .btn-vote.voted {
-            background: #14141f !important;
-            color: #555566 !important;
-            border: 1px solid rgba(255,255,255,0.05);
-            cursor: not-allowed;
-            box-shadow: none !important;
-            transform: none !important;
-        }
-
-        .btn-upload-label {
+            max-width: 480px;
+            height: 50px;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-primary);
-            width: 56px;
-            height: 56px;
-            flex-shrink: 0;
-        }
-
-        /* 大數據分析面板 */
-        .analytics-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 500px) {
-            .analytics-grid { grid-template-columns: 1fr; }
-        }
-
-        .metric-box {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border-subtle);
-            border-radius: 20px;
-            padding: 24px;
-            text-align: center;
-        }
-
-        .metric-title {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .metric-value {
-            font-size: 2.25rem;
-            font-weight: 900;
-            background: linear-gradient(180deg, #fff 0%, #c4c4cf 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .chart-box {
-            background: rgba(255,255,255,0.01);
-            border: 1px solid var(--border-subtle);
-            border-radius: 20px;
-            padding: 24px;
-            margin-top: 24px;
-        }
-
-        .chart-title {
-            font-size: 0.95rem;
-            font-weight: 800;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .svg-chart {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        /* 梗圖生成器結構 */
-        .generator-controls {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .control-group {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        #meme-input { display: none; }
-
-        .input-text {
-            flex: 1;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-primary);
-            padding: 16px 20px;
-            border-radius: 16px;
-            font-size: 1rem;
-            font-weight: 600;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .input-text:focus {
-            border-color: #ff3366;
-            background: rgba(0, 0, 0, 0.5);
-        }
-
-        .canvas-container {
-            width: 100%;
-            border-radius: 20px;
-            overflow: hidden;
-            background: #0b0b10;
-            margin-bottom: 24px;
-            border: 2px dashed rgba(255, 255, 255, 0.15);
-            position: relative;
-            min-height: 260px; 
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-        }
-
-        #meme-canvas {
-            max-width: 100%;
-            max-height: 500px;
-            object-fit: contain;
-            display: block;
-            z-index: 2;
-        }
-
-        .canvas-placeholder {
             color: var(--text-secondary);
-            font-size: 0.95rem;
-            font-weight: 600;
-            position: absolute;
-            text-align: center;
-            z-index: 1;
-        }
-
-        .canvas-placeholder i {
-            font-size: 2.5rem;
-            margin-bottom: 14px;
-            background: var(--brand-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: block;
-        }
-
-        .btn-primary:disabled {
-            background: #1c1c28;
-            color: #4a4a5a;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        footer {
-            text-align: center;
-            padding: 50px 0;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            border-top: 1px solid var(--border-subtle);
-            width: 100%;
+            font-size: 0.75rem;
+            margin: 10px 0;
             letter-spacing: 1px;
         }
 
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .game-container {
+            max-width: 480px;
+            width: 94%;
+            background: var(--bg-surface);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 16px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+            text-align: center;
         }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 40%, #8a9ba8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .dash-box {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 8px;
+            border-radius: 12px;
+        }
+
+        .dash-label {
+            font-size: 0.6rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .dash-value {
+            font-size: 1.1rem;
+            font-weight: 900;
+        }
+
+        #ui-level { color: var(--brand-warn); }
+        #ui-lives { color: #ff3366; font-size: 0.9rem; }
+        #current-score { color: #00f2fe; }
+
+        .stage-area {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: #06060a;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 242, 254, 0.1);
+            touch-action: none;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 介面選單疊層 */
+        .panel-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 8, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .panel-title {
+            font-size: 1.6rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .panel-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-cyber {
+            background: var(--brand-cyber);
+            color: #050508;
+            border: none;
+            padding: 12px 25px;
+            font-size: 0.95rem;
+            font-weight: 900;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+        }
+        
+        .btn-danger {
+            background: var(--brand-danger);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(ff, 8, 68, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #00f2fe;
+            border: 2px solid #00f2fe;
+            box-shadow: none;
+        }
+
+        /* 排行榜與輸入框專屬樣式 */
+        .record-input-group {
+            display: none; /* 預設隱藏，破紀錄才顯示 */
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+            width: 80%;
+        }
+
+        .name-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #00f2fe;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            text-align: center;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .name-input:focus {
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+        }
+
+        .leaderboard-list {
+            width: 90%;
+            max-height: 60%;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .rank-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            border-left: 4px solid transparent;
+        }
+
+        .rank-item.rank-1 { border-color: var(--brand-gold); background: rgba(255, 215, 0, 0.1); }
+        .rank-item.rank-2 { border-color: var(--brand-silver); background: rgba(192, 192, 192, 0.1); }
+        .rank-item.rank-3 { border-color: var(--brand-bronze); background: rgba(205, 127, 50, 0.1); }
+
+        .rank-info { display: flex; flex-direction: column; }
+        .rank-name { font-weight: 900; font-size: 1rem; color: #fff; }
+        .rank-level { font-size: 0.7rem; color: var(--text-secondary); }
+        .rank-score { font-weight: 900; font-size: 1.1rem; color: #00f2fe; }
     </style>
 </head>
 <body>
 
-<div class="ambient-glow" id="ambient"></div>
+<div class="ad-banner">
+    [廣告版位 Top] 日後在此貼上 Google AdSense 代碼
+</div>
 
-<header>
-    <span class="badge">🔥 TOP 5 Trending & Analytics</span>
-    <h1>Meme Hub</h1>
-    <p>全網瘋傳迷因即時對決、客製化梗圖產線與社群擴散指數監測。</p>
-</header>
+<div class="game-container">
+    <header>
+        <h1>Meme Dodge PRO</h1>
+    </header>
 
-<div class="container">
-    
-    <div class="section-header">
-        <i class="fa-solid fa-fire-flame-curved"></i>
-        <span>即時趨勢熱度榜單 (TOP 5)</span>
-    </div>
-    <div id="meme-container"></div>
-
-    <div class="section-header">
-        <i class="fa-solid fa-chart-pie"></i>
-        <span>即時核心大數據分析線</span>
-    </div>
-    <div class="analytics-card">
-        <div class="analytics-grid">
-            <div class="metric-box">
-                <div class="metric-title">總監測熱度權重池</div>
-                <div class="metric-value" id="total-heat-counter">0</div>
-            </div>
-            <div class="metric-box">
-                <div class="metric-title">今日網絡擴散指數</div>
-                <div class="metric-value" style="color:var(--brand-success); font-weight:900;">⚡ +142.8%</div>
-            </div>
+    <div class="dashboard">
+        <div class="dash-box">
+            <div class="dash-label">當前關卡</div>
+            <div class="dash-value">Lv.<span id="ui-level">1</span></div>
         </div>
-
-        <div class="chart-box">
-            <div class="chart-title">
-                <span>榜單前三名總熱度動態對比</span>
-                <span style="color:var(--text-secondary); font-size:0.75rem; font-weight:500;"><i class="fa-solid fa-rotate"></i> 每秒動態即時同步</span>
-            </div>
-            <svg class="svg-chart" viewBox="0 0 400 160" width="100%">
-                <rect x="20" y="30" width="360" height="16" rx="8" fill="#14141f" />
-                <rect id="bar-0" x="20" y="30" width="0" height="16" rx="8" fill="url(#grad-pink)" style="transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);"/>
-                <text x="25" y="22" fill="#86868b" font-size="11" font-weight="700">TOP 1 週一早上的我 (真實傷害)</text>
-
-                <rect x="20" y="80" width="360" height="16" rx="8" fill="#14141f" />
-                <rect id="bar-1" x="20" y="80" width="0" height="16" rx="8" fill="url(#grad-orange)" style="transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);"/>
-                <text x="25" y="72" fill="#86868b" font-size="11" font-weight="700">TOP 2 這群演算法真的太狠了</text>
-
-                <rect x="20" y="130" width="360" height="16" rx="8" fill="#14141f" />
-                <rect id="bar-2" x="20" y="130" width="0" height="16" rx="8" fill="#333344" style="transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);"/>
-                <text x="25" y="122" fill="#86868b" font-size="11" font-weight="700">TOP 3 1 meter in 1 second (千空阿姆)</text>
-
-                <defs>
-                    <linearGradient id="grad-pink" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" style="stop-color:#ff3366;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#ff5e3a;stop-opacity:1" />
-                    </linearGradient>
-                    <linearGradient id="grad-orange" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" style="stop-color:#ff5e3a;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#ffca28;stop-opacity:1" />
-                    </linearGradient>
-                </defs>
-            </svg>
+        <div class="dash-box">
+            <div class="dash-label">核心生命</div>
+            <div class="dash-value" id="ui-lives">❤️❤️❤️</div>
+        </div>
+        <div class="dash-box">
+            <div class="dash-label">存活時間</div>
+            <div class="dash-value" id="current-score">0.00s</div>
         </div>
     </div>
 
-    <div class="section-header">
-        <i class="fa-solid fa-wand-magic-sparkles"></i>
-        <span>病毒式梗圖生成器</span>
-    </div>
-    <div class="generator-card">
-        <div class="canvas-container" id="drop-zone">
-            <canvas id="meme-canvas"></canvas>
-            <div class="canvas-placeholder" id="canvas-placeholder">
-                <i class="fa-solid fa-cloud-arrow-up"></i>
-                點擊或拖曳圖片至此處上傳
+    <div class="stage-area">
+        <canvas id="cyberCanvas" width="600" height="600"></canvas>
+
+        <div class="panel-overlay" id="menu-panel">
+            <h2 class="panel-title" style="color: #00f2fe;">賽博演算法對決</h2>
+            <p class="panel-desc">點擊空白處可【瞬移閃現】。<br>你有 3 條命，每 10 秒提升一級難度！</p>
+            <div class="btn-group">
+                <button class="btn-cyber" id="btn-start">啟動系統</button>
+                <button class="btn-cyber btn-outline" id="btn-show-lb">排行榜</button>
             </div>
         </div>
 
-        <div class="generator-controls">
-            <div class="control-group">
-                <input type="file" id="meme-input" accept="image/*">
-                <label for="meme-input" class="btn btn-upload-label" aria-label="上傳圖片">
-                    <i class="fa-solid fa-image"></i>
-                </label>
-                <input type="text" id="meme-top-text" class="input-text" placeholder="填入迷因頂部文字...">
-            </div>
-            <div class="control-group">
-                <input type="text" id="meme-bottom-text" class="input-text" placeholder="填入迷因底部文字...">
-            </div>
+        <div class="panel-overlay" id="leaderboard-panel" style="display: none;">
+            <h2 class="panel-title" style="color: #ffca28;">🏆 英雄榜 Top 5</h2>
+            <div class="leaderboard-list" id="lb-list">
+                </div>
+            <button class="btn-cyber" id="btn-close-lb">返回主選單</button>
         </div>
 
-        <button id="download-meme" class="btn btn-primary" disabled>
-            <i class="fa-solid fa-cloud-arrow-down"></i>
-            導出高清迷因傑作
-        </button>
+        <div class="panel-overlay" id="over-panel" style="display: none;">
+            <h2 class="panel-title" style="color: #ff3366;">💥 生命值歸零</h2>
+            <p class="panel-desc" id="over-perf">核心數據崩潰</p>
+            
+            <div class="record-input-group" id="record-input-area">
+                <p style="color:#00e676; font-weight:900; font-size:0.9rem;">🎉 打破紀錄！進入 Top 5！</p>
+                <input type="text" id="player-name" class="name-input" placeholder="輸入你的大名 (最長8字)" maxlength="8" autocomplete="off">
+                <button class="btn-cyber" id="btn-save-record">儲存成績並重玩</button>
+            </div>
+
+            <div class="btn-group" id="normal-restart-area">
+                <button class="btn-cyber btn-danger" id="btn-restart">重新初始化</button>
+                <button class="btn-cyber btn-outline" id="btn-over-lb">查看排行</button>
+            </div>
+        </div>
     </div>
 </div>
 
-<footer>
-    <p>© 2026 Meme Hub Premium. All rights reserved.</p>
-</footer>
+<div class="ad-banner">
+    [廣告版位 Bottom] 支援響應式橫幅廣告
+</div>
 
 <script>
-    // 📊 擴充至 TOP 5 數據庫，並成功抽換 TOP 3 為你的專屬圖檔
-    const memeData = [
-        { 
-            id: "m-001", 
-            platform: "TikTok", 
-            title: "週一早上的我（附帶真實傷害）", 
-            imgUrl: "https://p16-comment-sign-sg.tiktokcdn.com/tos-alisg-i-zt8igodiya-sg/8fdc61dd7228454eb217a9a5caf035b5~tplv-jj85edgx6n-image-medium.jpeg?dr=8569&refresh_token=bf361e5c&x-expires=1782306000&x-signature=VgVuUcOf07ra4beC7OuYpIexTeA%3D&t=67a6c45e&ps=a0626fcd&shp=ff37627b&shcp=ff37627b&idc=my", 
-            heat: 2850,
-            trendColor: "#00e676",
-            trendText: "🔥 暴增 +48.3%",
-            path: "M0 25 Q15 5, 30 18 T60 12 T90 2 T120 15 T150 2" // 走勢曲線資料
-        },
-        { 
-            id: "m-002", 
-            platform: "Imgur", 
-            title: "這群演算法真的太狠了", 
-            imgUrl: "https://i.imgur.com/W4XdfyR_d.webp?maxwidth=520&shape=thumb&fidelity=high", 
-            heat: 2100,
-            trendColor: "#00e676",
-            trendText: "📈 穩步上升 +24.1%",
-            path: "M0 28 Q15 20, 30 22 T60 15 T90 10 T120 8 T150 5"
-        },
-        { 
-            id: "m-003", 
-            platform: "Reddit", 
-            title: "1 meter in 1 second (千空與阿姆的極速化學反應)", 
-            imgUrl: "https://images.jpg.cm/2026/05/26/image_6f52be.jpg", // 已載入你提供的特定圖片
-            heat: 1950,
-            trendColor: "#ff3366",
-            trendText: "⚡ 狂飆新進榜",
-            path: "M0 30 Q15 28, 30 25 T60 22 T90 14 T120 6 T150 1"
-        },
-        { 
-            id: "m-004", 
-            platform: "Facebook", 
-            title: "這張圖到底要傳幾年？（傳家寶級老梗複刻）", 
-            imgUrl: "https://scontent-tpe1-1.xx.fbcdn.net/v/t39.30808-6/705122885_1580248270330103_7938124730336629191_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_ohc=qpAPk4p_USgQ7kNvwHVUPeT&_nc_oc=AdrQZ3J1c66HrP5BwuPTiG_naJ8NOUKL8xKSBxULQViB_fLCC51yu1qcqqN6InDx9pSg4oNYKm233BWcOYNFLcKU&_nc_zt=23&_nc_ht=scontent-tpe1-1.xx&_nc_gid=l9KN6LwrL93kGL_oSlsWcA&_nc_ss=7b2a8&oh=00_Af6He7FEU1-qhfZE-klrZeNtaGzTPajYvwSWBCa8YjUBrg&oe=6A1A25CF", 
-            heat: 1540,
-            trendColor: "#ffca28",
-            trendText: "📊 本週持平",
-            path: "M0 15 Q15 14, 30 16 T60 15 T90 15 T120 16 T150 15"
-        },
-        { 
-            id: "m-005", 
-            platform: "X (Twitter)", 
-            title: "當主管說『這件事很簡單，你順便看一下』", 
-            imgUrl: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=600&auto=format&fit=crop", 
-            heat: 1210,
-            trendColor: "#00e676",
-            trendText: "🔺 微幅爬升 +8.4%",
-            path: "M0 25 Q15 22, 30 24 T60 20 T90 19 T120 17 T150 14"
-        }
-    ];
+    const canvas = document.getElementById('cyberCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // UI 面板
+    const menuPanel = document.getElementById('menu-panel');
+    const overPanel = document.getElementById('over-panel');
+    const lbPanel = document.getElementById('leaderboard-panel');
+    const lbList = document.getElementById('lb-list');
+    const recordInputArea = document.getElementById('record-input-area');
+    const normalRestartArea = document.getElementById('normal-restart-area');
+    const overPerf = document.getElementById('over-perf');
+    const playerNameInput = document.getElementById('player-name');
+    
+    // 按鈕
+    const btnStart = document.getElementById('btn-start');
+    const btnRestart = document.getElementById('btn-restart');
+    const btnShowLb = document.getElementById('btn-show-lb');
+    const btnCloseLb = document.getElementById('btn-close-lb');
+    const btnOverLb = document.getElementById('btn-over-lb');
+    const btnSaveRecord = document.getElementById('btn-save-record');
+    
+    // 狀態數值 UI
+    const currentScoreEl = document.getElementById('current-score');
+    const uiLevel = document.getElementById('ui-level');
+    const uiLives = document.getElementById('ui-lives');
 
-    // 背景滑鼠追蹤微互動
-    const ambient = document.getElementById('ambient');
-    document.addEventListener('mousemove', (e) => {
-        if(ambient) {
-            const x = (e.clientX / window.innerWidth - 0.5) * 50;
-            ambient.style.transform = `translateX(calc(-50% + ${x}px))`;
-        }
-    });
+    // --- 排行榜核心系統 ---
+    const MAX_LB_SIZE = 5;
+    let leaderboard = JSON.parse(localStorage.getItem('meme_pro_leaderboard_v1')) || [];
 
-    // 刷新中央分析池數據與前三名長條圖
-    function refreshAnalytics() {
-        const totalHeat = memeData.reduce((sum, item) => sum + item.heat, 0);
-        const totalCounter = document.getElementById('total-heat-counter');
-        
-        if (totalCounter) {
-            let start = parseInt(totalCounter.textContent.replace(/,/g, '')) || 0;
-            let duration = 400;
-            let startTime = null;
-
-            function animateNumber(timestamp) {
-                if (!startTime) startTime = timestamp;
-                let progress = timestamp - startTime;
-                let current = Math.min(Math.floor(start + (totalHeat - start) * (progress / duration)), totalHeat);
-                totalCounter.textContent = current.toLocaleString();
-                if (progress < duration) requestAnimationFrame(animateNumber);
-            }
-            requestAnimationFrame(animateNumber);
+    function renderLeaderboard() {
+        lbList.innerHTML = '';
+        if (leaderboard.length === 0) {
+            lbList.innerHTML = '<p style="color:#7e7e9a; text-align:center;">尚無神人紀錄，趕快搶下第一名！</p>';
+            return;
         }
 
-        // 同步前三名到下方的分析長條圖
-        const maxHeat = Math.max(...memeData.map(o => o.heat));
-        for(let i=0; i<3; i++) {
-            const bar = document.getElementById(`bar-${i}`);
-            if (bar && memeData[i]) {
-                bar.setAttribute('width', (memeData[i].heat / maxHeat) * 360);
-            }
-        }
-    }
-
-    // 動態建構 TOP 5 迷因卡片與嵌入式 Mini 趨勢圖
-    const rankingContainer = document.getElementById('meme-container');
-    if (rankingContainer) {
-        memeData.forEach((item, index) => {
-            const card = document.createElement('div');
-            card.className = 'meme-card';
-            card.innerHTML = `
-                <div class="rank-tag">
-                    <i class="fa-solid fa-trophy" style="color: #ffca28;"></i>
-                    <span>TOP 0${index + 1}</span>
-                </div>
-                <div class="meme-viewport">
-                    <img src="${item.imgUrl}" class="meme-img" alt="Meme Media" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop'">
-                </div>
-                <div class="content-meta">
-                    <h3 class="meme-title"></h3>
-                    <div class="status-bar">
-                        <div class="heat-indicator">
-                            <i class="fa-solid fa-chart-line" style="color:#ff3366;"></i>
-                            <span>來源渠道: <strong class="meme-platform"></strong></span>
-                        </div>
-                        <div class="heat-indicator">
-                            <span>熱度權重:</span>
-                            <span class="heat-count"></span>
-                        </div>
+        leaderboard.forEach((entry, index) => {
+            const rank = index + 1;
+            let rankClass = rank <= 3 ? `rank-${rank}` : '';
+            let medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+            
+            lbList.innerHTML += `
+                <div class="rank-item ${rankClass}">
+                    <div class="rank-info">
+                        <span class="rank-name">${medal} ${entry.name}</span>
+                        <span class="rank-level">最高關卡: Lv.${entry.level}</span>
                     </div>
-
-                    <div class="mini-trend-box">
-                        <div class="mini-trend-info">
-                            <span class="mini-trend-label">週/月擴散監測</span>
-                            <span class="mini-trend-status" style="color:${item.trendColor};">${item.trendText}</span>
-                        </div>
-                        <div class="mini-svg-container">
-                            <svg viewBox="0 0 150 32" width="100%" height="100%">
-                                <path d="${item.path}" fill="none" stroke="${item.trendColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <div class="action-group">
-                        <button class="btn btn-primary btn-vote" aria-label="投票支持">
-                            <i class="fa-solid fa-bolt"></i>
-                            <span>UPVOTE</span>
-                        </button>
-                    </div>
+                    <span class="rank-score">${entry.score.toFixed(2)}s</span>
                 </div>
             `;
-            
-            card.querySelector('.meme-title').textContent = item.title;
-            card.querySelector('.meme-platform').textContent = item.platform;
-            
-            const voteBtn = card.querySelector('.btn-vote');
-            const heatSpan = card.querySelector('.heat-count');
-            heatSpan.textContent = item.heat.toLocaleString();
-
-            voteBtn.addEventListener('click', () => {
-                item.heat += 150; 
-                heatSpan.textContent = item.heat.toLocaleString();
-                voteBtn.disabled = true;
-                voteBtn.classList.add('voted');
-                voteBtn.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--brand-success)"></i> <span>已投票 VERIFIED VOTE</span>`;
-                
-                refreshAnalytics();
-                if (navigator.vibrate) navigator.vibrate(15);
-            });
-
-            rankingContainer.appendChild(card);
         });
     }
 
-    refreshAnalytics();
+    function checkIsTopRecord(finalScore) {
+        if (leaderboard.length < MAX_LB_SIZE) return true;
+        return finalScore > leaderboard[leaderboard.length - 1].score;
+    }
 
-    // 梗圖生成器核心功能
-    const memeInput = document.getElementById('meme-input');
-    const dropZone = document.getElementById('drop-zone');
-    const memeTopText = document.getElementById('meme-top-text');
-    const memeBottomText = document.getElementById('meme-bottom-text');
-    const memeCanvas = document.getElementById('meme-canvas');
-    const canvasPlaceholder = document.getElementById('canvas-placeholder');
-    const downloadMeme = document.getElementById('download-meme');
+    function saveToLeaderboard(name, finalScore, finalLevel) {
+        const safeName = name.trim() || '無名英雄';
+        leaderboard.push({ name: safeName, score: finalScore, level: finalLevel });
+        // 依照分數由高到低排序
+        leaderboard.sort((a, b) => b.score - a.score);
+        // 只保留前 5 名
+        if (leaderboard.length > MAX_LB_SIZE) leaderboard = leaderboard.slice(0, MAX_LB_SIZE);
+        localStorage.setItem('meme_pro_leaderboard_v1', JSON.stringify(leaderboard));
+    }
 
-    if (memeCanvas) {
-        const ctx = memeCanvas.getContext('2d');
-        let originalImage = null;
+    // 面板切換事件
+    btnShowLb.addEventListener('click', () => {
+        menuPanel.style.display = 'none';
+        renderLeaderboard();
+        lbPanel.style.display = 'flex';
+    });
+    btnOverLb.addEventListener('click', () => {
+        overPanel.style.display = 'none';
+        renderLeaderboard();
+        lbPanel.style.display = 'flex';
+    });
+    btnCloseLb.addEventListener('click', () => {
+        lbPanel.style.display = 'none';
+        // 如果遊戲還沒開始就回主選單，不然其實也可以設計直接重玩
+        menuPanel.style.display = 'flex'; 
+    });
 
-        if (dropZone && memeInput) {
-            dropZone.addEventListener('click', () => memeInput.click());
-            dropZone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                dropZone.style.borderColor = "#ff3366";
-            });
-            dropZone.addEventListener('dragleave', () => {
-                dropZone.style.borderColor = "rgba(255, 255, 255, 0.15)";
-            });
-            dropZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dropZone.style.borderColor = "rgba(255, 255, 255, 0.15)";
-                if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]);
-            });
+    // 遊戲圖片
+    const playerImg = new Image();
+    let imgLoaded = false;
+    playerImg.onload = () => { imgLoaded = true; };
+    playerImg.src = 'senku-eminem.jpg';
 
-            memeInput.addEventListener('change', (e) => {
-                if (e.target.files.length) processFile(e.target.files[0]);
+    // 遊戲變數
+    let isPlaying = false;
+    let score = 0;
+    let level = 1;
+    let lives = 3;
+    let levelUpTimer = 0;
+
+    let player = {
+        x: 300, y: 300,
+        targetX: 300, targetY: 300,
+        vx: 0, vy: 0,
+        radius: 26, hitRadius: 8,
+        invincibleUntil: 0,
+        dashCooldownUntil: 0, dashCDDuration: 2000
+    };
+
+    let enemies = [];
+    let particles = []; 
+    let gameStartTime = 0;
+    let lastSpawnTime = 0;
+
+    function getEventCoords(clientX, clientY) {
+        const rect = canvas.getBoundingClientRect();
+        return {
+            x: ((clientX - rect.left) / rect.width) * canvas.width,
+            y: ((clientY - rect.top) / rect.height) * canvas.height
+        };
+    }
+
+    function triggerDash(clientX, clientY) {
+        if (!isPlaying) return;
+        const now = performance.now();
+        if (now < player.dashCooldownUntil) return;
+
+        const coords = getEventCoords(clientX, clientY);
+        createExplosion(player.x, player.y, '#00f2fe', 15);
+        player.x = coords.x; player.y = coords.y;
+        player.targetX = coords.x; player.targetY = coords.y;
+        player.vx = 0; player.vy = 0;
+        player.invincibleUntil = now + 250; 
+        player.dashCooldownUntil = now + player.dashCDDuration;
+        createExplosion(player.x, player.y, '#ffffff', 15);
+    }
+
+    function createExplosion(x, y, color, count) {
+        for(let i=0; i<count; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 1 + Math.random() * 5;
+            particles.push({
+                x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+                radius: 2 + Math.random() * 4, color, alpha: 1, decay: 0.02 + Math.random() * 0.03
             });
         }
+    }
 
-        function processFile(file) {
-            if (!file || !file.type.startsWith('image/')) return;
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const img = new Image();
-                img.onload = () => {
-                    originalImage = img;
-                    if (canvasPlaceholder) canvasPlaceholder.style.display = 'none';
-                    if (downloadMeme) downloadMeme.disabled = false;
-                    updateMemeCanvas();
-                };
-                img.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
+    // 控制監聽
+    canvas.addEventListener('mousedown', (e) => {
+        if(!isPlaying) return;
+        const coords = getEventCoords(e.clientX, e.clientY);
+        if(Math.hypot(player.x - coords.x, player.y - coords.y) > 50) triggerDash(e.clientX, e.clientY);
+    });
+    canvas.addEventListener('mousemove', (e) => {
+        if (!isPlaying) return;
+        const coords = getEventCoords(e.clientX, e.clientY);
+        if (Math.hypot(player.x - coords.x, player.y - coords.y) < 200) {
+            player.targetX = coords.x; player.targetY = coords.y;
+        }
+    });
+    canvas.addEventListener('touchstart', (e) => {
+        if (!isPlaying || e.touches.length === 0) return;
+        const touch = e.touches[0];
+        const coords = getEventCoords(touch.clientX, touch.clientY);
+        if (Math.hypot(player.x - coords.x, player.y - coords.y) > 60) {
+            triggerDash(touch.clientX, touch.clientY);
+        } else {
+            player.targetX = coords.x; player.targetY = coords.y;
+        }
+    });
+    canvas.addEventListener('touchmove', (e) => {
+        if (!isPlaying || e.touches.length === 0) return;
+        const coords = getEventCoords(e.touches[0].clientX, e.touches[0].clientY);
+        player.targetX = coords.x; player.targetY = coords.y;
+    });
+
+    function updateLivesDisplay() {
+        let hearts = "";
+        for(let i=0; i<3; i++) hearts += (i < lives) ? "❤️" : "🖤";
+        uiLives.textContent = hearts;
+    }
+
+    btnStart.addEventListener('click', actionInitialize);
+    btnRestart.addEventListener('click', actionInitialize);
+    
+    // 儲存紀錄並重新開始
+    btnSaveRecord.addEventListener('click', () => {
+        saveToLeaderboard(playerNameInput.value, score, level);
+        actionInitialize();
+    });
+
+    function actionInitialize() {
+        menuPanel.style.display = 'none';
+        overPanel.style.display = 'none';
+        lbPanel.style.display = 'none';
+        playerNameInput.value = ''; // 清空輸入框
+
+        isPlaying = true;
+        score = 0; level = 1; lives = 3;
+        uiLevel.textContent = level;
+        updateLivesDisplay();
+        
+        enemies = []; particles = [];
+        player.x = 300; player.y = 300;
+        player.targetX = 300; player.targetY = 300;
+        player.vx = 0; player.vy = 0;
+
+        const now = performance.now();
+        gameStartTime = now; lastSpawnTime = now;
+        player.invincibleUntil = now + 2500; 
+
+        requestAnimationFrame(gameLoop);
+    }
+
+    function actionExecuteGameOver() {
+        isPlaying = false;
+        createExplosion(player.x, player.y, '#ff3366', 50); 
+        
+        setTimeout(() => {
+            overPerf.innerHTML = `達陣 <strong style="color:#ffca28;">Lv.${level}</strong><br>存活時間：<strong style="color:#00f2fe;">${score.toFixed(2)} 秒</strong>！`;
+            
+            // 判斷是否破紀錄
+            if (checkIsTopRecord(score)) {
+                recordInputArea.style.display = 'flex';
+                normalRestartArea.style.display = 'none';
+                playerNameInput.focus(); // 自動聚焦輸入框
+            } else {
+                recordInputArea.style.display = 'none';
+                normalRestartArea.style.display = 'flex';
+            }
+
+            overPanel.style.display = 'flex';
+        }, 800);
+    }
+
+    function spawnCyberEnemy() {
+        let x, y;
+        const side = Math.floor(Math.random() * 4);
+        if (side === 0) { x = Math.random() * canvas.width; y = -20; }
+        else if (side === 1) { x = canvas.width + 20; y = Math.random() * canvas.height; }
+        else if (side === 2) { x = Math.random() * canvas.width; y = canvas.height + 20; }
+        else { x = -20; y = Math.random() * canvas.height; }
+
+        const angle = Math.atan2(player.y - y, player.x - x) + (Math.random() * 0.3 - 0.15);
+        const baseSpeed = 2.0 + (level * 0.4);
+        const speed = baseSpeed + Math.random() * 2.5;
+        const radius = 6 + Math.random() * (8 + level);
+        const colors = ['#ff0844', '#00f2fe', '#00e676', '#ffb199', '#fbc2eb'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+
+        enemies.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, radius, color });
+    }
+
+    function gameLoop(timestamp) {
+        if (!isPlaying) {
+            ctx.fillStyle = '#050508';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            renderParticles();
+            if(particles.length > 0) requestAnimationFrame(gameLoop);
+            return;
         }
 
-        if (memeTopText) memeTopText.addEventListener('input', updateMemeCanvas);
-        if (memeBottomText) memeBottomText.addEventListener('input', updateMemeCanvas);
+        score = (timestamp - gameStartTime) / 1000;
+        currentScoreEl.textContent = score.toFixed(2) + 's';
 
-        function updateMemeCanvas() {
-            if (!originalImage || !ctx) return;
+        let expectedLevel = Math.floor(score / 10) + 1;
+        if (expectedLevel > level) {
+            level = expectedLevel;
+            uiLevel.textContent = level;
+            levelUpTimer = timestamp + 2000;
+            createExplosion(player.x, player.y, '#ffca28', 25);
+        }
 
-            const maxDimension = 1000;
-            let width = originalImage.width;
-            let height = originalImage.height;
+        ctx.fillStyle = 'rgba(5, 5, 8, 0.25)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            if (width > maxDimension || height > maxDimension) {
-                if (width > height) {
-                    height = Math.round((height * maxDimension) / width);
-                    width = maxDimension;
-                } else {
-                    width = Math.round((width * maxDimension) / height);
-                    height = maxDimension;
+        const now = timestamp;
+        const isInvincible = now < player.invincibleUntil;
+        const spawnInterval = Math.max(60, 350 - (level * 25));
+        
+        if (now - lastSpawnTime > spawnInterval) {
+            spawnCyberEnemy();
+            lastSpawnTime = now;
+        }
+
+        player.vx += (player.targetX - player.x) * 0.08;
+        player.vy += (player.targetY - player.y) * 0.08;
+        player.vx *= 0.75; player.vy *= 0.75;
+        player.x += player.vx; player.y += player.vy;
+
+        if (player.x < player.radius) player.x = player.radius;
+        if (player.x > canvas.width - player.radius) player.x = canvas.width - player.radius;
+        if (player.y < player.radius) player.y = player.radius;
+        if (player.y > canvas.height - player.radius) player.y = canvas.height - player.radius;
+
+        renderParticles();
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
+        ctx.clip();
+        if (imgLoaded) {
+            if (isInvincible && Math.floor(now / 100) % 2 === 0) ctx.globalAlpha = 0.5;
+            ctx.drawImage(playerImg, player.x - player.radius, player.y - player.radius, player.radius * 2, player.radius * 2);
+        } else {
+            let grad = ctx.createRadialGradient(player.x, player.y, 2, player.x, player.y, player.radius);
+            grad.addColorStop(0, '#ffffff'); grad.addColorStop(1, '#00f2fe');
+            ctx.fillStyle = grad; ctx.fill();
+        }
+        ctx.restore();
+
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, player.radius + 3, 0, Math.PI * 2);
+        if (isInvincible) {
+            ctx.strokeStyle = `rgba(0, 242, 254, ${0.5 + Math.sin(now/40)*0.4})`;
+            ctx.lineWidth = 3; ctx.stroke();
+        }
+
+        let cdProgress = 1;
+        if (now < player.dashCooldownUntil) {
+            cdProgress = 1 - ((player.dashCooldownUntil - now) / player.dashCDDuration);
+        }
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, player.radius + 7, -Math.PI/2, (-Math.PI/2) + (Math.PI * 2 * cdProgress));
+        ctx.strokeStyle = cdProgress === 1 ? '#00e676' : '#00f2fe';
+        ctx.lineWidth = 2; ctx.stroke();
+
+        for (let i = enemies.length - 1; i >= 0; i--) {
+            let e = enemies[i];
+            e.x += e.vx; e.y += e.vy;
+
+            ctx.beginPath();
+            ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+            ctx.fillStyle = e.color; ctx.fill();
+
+            if (Math.random() < 0.15) {
+                particles.push({
+                    x: e.x, y: e.y, vx: 0, vy: 0, radius: e.radius * 0.3, color: e.color, alpha: 0.6, decay: 0.04
+                });
+            }
+
+            if (!isInvincible) {
+                const dist = Math.hypot(player.x - e.x, player.y - e.y);
+                if (dist < player.hitRadius + e.radius) {
+                    lives--;
+                    updateLivesDisplay();
+                    createExplosion(player.x, player.y, '#ff3366', 25);
+                    
+                    if (lives <= 0) {
+                        actionExecuteGameOver();
+                        return;
+                    } else {
+                        player.invincibleUntil = now + 2000;
+                        enemies.splice(i, 1);
+                        continue;
+                    }
                 }
             }
 
-            memeCanvas.width = width;
-            memeCanvas.height = height;
-            ctx.drawImage(originalImage, 0, 0, width, height);
-
-            const fontSize = Math.floor(memeCanvas.height * 0.09);
-            ctx.font = `900 ${fontSize}px 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif`;
-            ctx.fillStyle = 'white';
-            ctx.strokeStyle = 'black';
-            ctx.lineWidth = fontSize / 6;
-            ctx.lineJoin = 'bevel';
-            ctx.textAlign = 'center';
-
-            const topText = memeTopText ? memeTopText.value : "";
-            const bottomText = memeBottomText ? memeBottomText.value : "";
-
-            if (topText) {
-                ctx.textBaseline = 'top';
-                ctx.strokeText(topText, memeCanvas.width / 2, 25);
-                ctx.fillText(topText, memeCanvas.width / 2, 25);
-            }
-
-            if (bottomText) {
-                ctx.textBaseline = 'bottom';
-                ctx.strokeText(bottomText, memeCanvas.width / 2, memeCanvas.height - 25);
-                ctx.fillText(bottomText, memeCanvas.width / 2, memeCanvas.height - 25);
+            if (e.x < -40 || e.x > canvas.width + 40 || e.y < -40 || e.y > canvas.height + 40) {
+                enemies.splice(i, 1);
             }
         }
 
-        if (downloadMeme) {
-            downloadMeme.addEventListener('click', () => {
-                if (!originalImage) return;
-                const dataURL = memeCanvas.toDataURL('image/jpeg', 0.9);
-                const a = document.createElement('a');
-                a.href = dataURL;
-                a.download = `MemeHub-${new Date().getTime()}.jpg`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            });
+        if (now < levelUpTimer) {
+            ctx.fillStyle = `rgba(255, 202, 40, ${Math.abs(Math.sin(now / 150))})`; 
+            ctx.font = '900 36px "Plus Jakarta Sans"';
+            ctx.textAlign = 'center';
+            ctx.fillText(`LEVEL ${level}!`, canvas.width / 2, canvas.height / 4);
+        }
+
+        requestAnimationFrame(gameLoop);
+    }
+
+    function renderParticles() {
+        for (let i = particles.length - 1; i >= 0; i--) {
+            let p = particles[i];
+            p.x += p.vx; p.y += p.vy;
+            p.alpha -= p.decay;
+
+            if (p.alpha <= 0) {
+                particles.splice(i, 1);
+                continue;
+            }
+            ctx.save();
+            ctx.globalAlpha = p.alpha;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = p.color; ctx.fill();
+            ctx.restore();
         }
     }
 </script>
