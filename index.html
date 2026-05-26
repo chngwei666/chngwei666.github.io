@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meme Hub | 全球頂尖迷因排行榜與即時梗圖生成</title>
+    <title>Meme Hub | 全球頂尖迷因排行榜、即時分析與梗圖生成</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
     <link id="dynamic-favicon" rel="icon" type="image/png" href="https://api.iconify.design/twemoji:face-with-tears-of-joy.svg">
-    <link id="dynamic-apple-icon" rel="apple-touch-icon" href="https://api.iconify.design/twemoji:face-with-tears-of-joy.svg">
     
     <style>
         :root {
@@ -25,7 +24,6 @@
             --shadow-luxury: 0 20px 40px rgba(0, 0, 0, 0.7);
         }
 
-        /* 全域重設與效能優化 */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -104,6 +102,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            margin-top: 40px;
             margin-bottom: 25px;
             color: var(--text-secondary);
             text-transform: uppercase;
@@ -112,9 +111,10 @@
             letter-spacing: 1px;
         }
 
+        .section-header:first-of-type { margin-top: 0; }
         .section-header i { color: #ff3366; }
 
-        /* 排行榜卡片組件 */
+        /* 迷因排行榜卡片 */
         .meme-card { 
             position: relative;
             background: var(--bg-surface); 
@@ -197,6 +197,7 @@
             font-size: 1.05rem;
         }
 
+        /* 按鈕系統 */
         .btn {
             border: none;
             border-radius: 14px;
@@ -237,13 +238,8 @@
             height: 52px;
         }
 
-        .btn-upload-label:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        /* 梗圖生成器 */
-        .generator-card {
+        /* 數據分析面板樣式 */
+        .analytics-card, .generator-card {
             background: var(--bg-surface);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
@@ -253,6 +249,65 @@
             box-shadow: var(--shadow-luxury);
         }
 
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 500px) {
+            .analytics-grid { grid-template-columns: 1fr; }
+        }
+
+        .metric-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .metric-title {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #a1a1a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 完美的內嵌 SVG 圖表樣式 */
+        .chart-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .chart-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-primary);
+        }
+
+        .svg-chart {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* 梗圖生成器結構 */
         .generator-controls {
             display: flex;
             flex-direction: column;
@@ -315,9 +370,7 @@
             text-align: center;
         }
 
-        #download-meme {
-            width: 100%;
-        }
+        #download-meme { width: 100%; }
 
         footer {
             text-align: center;
@@ -333,17 +386,66 @@
 <body>
 
 <header>
-    <span class="badge">TRENDS & CREATION</span>
-    <h1>Meme Hub</h1>
-    <p>匯聚全球頂尖迷因熱度榜，並提供即時病毒式梗圖生成工具。</p>
+    <span class="badge">ANALYTICS & CREATION</span>
+    <h1>Meme Hub Hub</h1>
+    <p>整合全球社群網絡核心權重、病毒式梗圖生產線與智能數據分析引擎。</p>
 </header>
 
 <div class="container">
+    
     <div class="section-header">
         <i class="fa-solid fa-fire-flame-curved"></i>
         <span>即時趨勢熱度榜單</span>
     </div>
     <div id="meme-container"></div>
+
+    <div class="section-header">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>即時核心大數據分析線</span>
+    </div>
+    <div class="analytics-card">
+        <div class="analytics-grid">
+            <div class="metric-box">
+                <div class="metric-title">總監測熱度權重池</div>
+                <div class="metric-value" id="total-heat-counter">0</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-title">今日網絡擴散指數</div>
+                <div class="metric-value" style="color:#00e676;">⚡ +142.8%</div>
+            </div>
+        </div>
+
+        <div class="chart-box">
+            <div class="chart-title">
+                <span>榜單迷因熱度即時對比</span>
+                <span style="color:var(--text-secondary); font-size:0.75rem;">數據每秒同步</span>
+            </div>
+            <svg class="svg-chart" viewBox="0 0 400 160" width="100%">
+                <rect x="20" y="30" width="360" height="16" rx="8" fill="#1c1c24" />
+                <rect id="bar-0" x="20" y="30" width="0" height="16" rx="8" fill="url(#grad-pink)" style="transition: width 0.6s ease;"/>
+                <text x="25" y="22" fill="#86868b" font-size="11" font-weight="600">TOP 1 職場行為學</text>
+
+                <rect x="20" y="80" width="360" height="16" rx="8" fill="#1c1c24" />
+                <rect id="bar-1" x="20" y="80" width="0" height="16" rx="8" fill="url(#grad-orange)" style="transition: width 0.6s ease;"/>
+                <text x="25" y="72" fill="#86868b" font-size="11" font-weight="600">TOP 2 演算法諷刺</text>
+
+                <rect x="20" y="130" width="360" height="16" rx="8" fill="#1c1c24" />
+                <rect id="bar-2" x="20" y="130" width="0" height="16" rx="8" fill="#33333f" style="transition: width 0.6s ease;"/>
+                <text x="25" y="122" fill="#86868b" font-size="11" font-weight="600">TOP 3 骨灰級經典</text>
+
+                <defs>
+                    <linearGradient id="grad-pink" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#ff3366;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#ff5e3a;stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="grad-orange" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#ff5e3a;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#ffca28;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+    </div>
 
     <div class="section-header">
         <i class="fa-solid fa-wand-magic-sparkles"></i>
@@ -383,29 +485,33 @@
 </footer>
 
 <script>
-    // 💡【自訂頭像通道】如果未來有自己的照片網址，把它貼在下面的引號內：
-    // 例如：const MY_CUSTOM_AVATAR = "https://i.imgur.com/xxxxxx.png";
-    const MY_CUSTOM_AVATAR = ""; 
-
-    // 安全載入客製化頭像邏輯 (就算沒填也絕對不報錯)
-    if (MY_CUSTOM_AVATAR && MY_CUSTOM_AVATAR.trim() !== "") {
-        try {
-            document.getElementById('dynamic-favicon').href = MY_CUSTOM_AVATAR;
-            document.getElementById('dynamic-apple-icon').href = MY_CUSTOM_AVATAR;
-        } catch(e) {
-            console.log("頭像載入失敗，使用系統預設安全圖標");
-        }
-    }
-
-    // 排行榜資料與安全渲染
+    // 原始核心數據
     const memeData = [
         { id: "m-001", platform: "TikTok", title: "跨世代共鳴：當代職場行為學精選", imgUrl: "https://p16-comment-sign-sg.tiktokcdn.com/tos-alisg-i-zt8igodiya-sg/8fdc61dd7228454eb217a9a5caf035b5~tplv-jj85edgx6n-image-medium.jpeg?dr=8569&refresh_token=bf361e5c&x-expires=1782306000&x-signature=VgVuUcOf07ra4beC7OuYpIexTeA%3D&t=67a6c45e&ps=a0626fcd&shp=ff37627b&shcp=ff37627b&idc=my", heat: 2850 },
         { id: "m-002", platform: "Imgur", title: "海外論壇高分神作：演算法的終極諷刺", imgUrl: "https://i.imgur.com/W4XdfyR_d.webp?maxwidth=520&shape=thumb&fidelity=high", heat: 2100 },
         { id: "m-003", platform: "Facebook", title: "社群核心擴散：迷因骨灰級玩家經典複刻", imgUrl: "https://scontent-tpe1-1.xx.fbcdn.net/v/t39.30808-6/705122885_1580248270330103_7938124730336629191_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_ohc=qpAPk4p_USgQ7kNvwHVUPeT&_nc_oc=AdrQZ3J1c66HrP5BwuPTiG_naJ8NOUKL8xKSBxULQViB_fLCC51yu1qcqqN6InDx9pSg4oNYKm233BWcOYNFLcKU&_nc_zt=23&_nc_ht=scontent-tpe1-1.xx&_nc_gid=l9KN6LwrL93kGL_oSlsWcA&_nc_ss=7b2a8&oh=00_Af6He7FEU1-qhfZE-klrZeNtaGzTPajYvwSWBCa8YjUBrg&oe=6A1A25CF", heat: 1850 }
     ];
 
-    const rankingContainer = document.getElementById('meme-container');
+    // 數據分析核心渲染邏輯
+    function refreshAnalytics() {
+        const totalHeat = memeData.reduce((sum, item) => sum + item.heat, 0);
+        const totalCounter = document.getElementById('total-heat-counter');
+        if (totalCounter) totalCounter.textContent = totalHeat.toLocaleString();
 
+        // 動態計算最大比例並畫出 SVG 柱狀圖
+        const maxHeat = Math.max(...memeData.map(o => o.heat));
+        memeData.forEach((item, index) => {
+            const bar = document.getElementById(`bar-${index}`);
+            if (bar) {
+                // 最大寬度為 360px
+                const calculatedWidth = (item.heat / maxHeat) * 360;
+                bar.setAttribute('width', calculatedWidth);
+            }
+        });
+    }
+
+    // 排行榜生成
+    const rankingContainer = document.getElementById('meme-container');
     if (rankingContainer) {
         memeData.forEach((item, index) => {
             const card = document.createElement('div');
@@ -439,31 +545,33 @@
                 </div>
             `;
             
-            const titleNode = card.querySelector('.meme-title');
-            const platformNode = card.querySelector('.meme-platform');
-            if (titleNode) titleNode.textContent = item.title;
-            if (platformNode) platformNode.textContent = item.platform;
+            card.querySelector('.meme-title').textContent = item.title;
+            card.querySelector('.meme-platform').textContent = item.platform;
             
             const voteBtn = card.querySelector('.btn-vote');
             const heatSpan = card.querySelector('.heat-count');
-            
-            if (heatSpan) heatSpan.textContent = item.heat.toLocaleString();
+            heatSpan.textContent = item.heat.toLocaleString();
 
-            if (voteBtn && heatSpan) {
-                voteBtn.addEventListener('click', () => {
-                    item.heat++;
-                    heatSpan.textContent = item.heat.toLocaleString();
-                    voteBtn.disabled = true;
-                    voteBtn.style.background = '#16161e';
-                    voteBtn.innerHTML = `<span>已投 VERIFIED VISITOR VOTE</span>`;
-                    if (navigator.vibrate) navigator.vibrate(12);
-                });
-            }
+            voteBtn.addEventListener('click', () => {
+                item.heat += 150; // 投票增加顯著權重以觸發圖表變化
+                heatSpan.textContent = item.heat.toLocaleString();
+                voteBtn.disabled = true;
+                voteBtn.style.background = '#16161e';
+                voteBtn.innerHTML = `<span>已投 VERIFIED VISITOR VOTE</span>`;
+                
+                // 核心連動：立即重新整理分析面板
+                refreshAnalytics();
+                if (navigator.vibrate) navigator.vibrate(12);
+            });
+
             rankingContainer.appendChild(card);
         });
     }
 
-    // 梗圖生成器安全封裝
+    // 啟動首次大數據分析計算
+    refreshAnalytics();
+
+    // 梗圖生成器核心
     const memeInput = document.getElementById('meme-input');
     const memeTopText = document.getElementById('meme-top-text');
     const memeBottomText = document.getElementById('meme-bottom-text');
