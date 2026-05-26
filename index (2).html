@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Meme Dodge PRO | 終極排行榜版</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;900&family=Noto+Sans+TC:wght@700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-base: #050508;
+            --bg-surface: rgba(13, 13, 23, 0.85);
+            --brand-cyber: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --brand-danger: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+            --brand-warn: #ffca28;
+            --brand-gold: #ffd700;
+            --brand-silver: #c0c0c0;
+            --brand-bronze: #cd7f32;
+            --text-primary: #f5f5f7;
+            --text-secondary: #7e7e9a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body { 
+            background-color: var(--bg-base); 
+            color: var(--text-primary); 
+            font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ad-banner {
+            width: 100%;
+            max-width: 480px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin: 10px 0;
+            letter-spacing: 1px;
+        }
+
+        .game-container {
+            max-width: 480px;
+            width: 94%;
+            background: var(--bg-surface);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 16px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 40%, #8a9ba8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .dash-box {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 8px;
+            border-radius: 12px;
+        }
+
+        .dash-label {
+            font-size: 0.6rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .dash-value {
+            font-size: 1.1rem;
+            font-weight: 900;
+        }
+
+        #ui-level { color: var(--brand-warn); }
+        #ui-lives { color: #ff3366; font-size: 0.9rem; }
+        #current-score { color: #00f2fe; }
+
+        .stage-area {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: #06060a;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 242, 254, 0.1);
+            touch-action: none;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 介面選單疊層 */
+        .panel-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 8, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .panel-title {
+            font-size: 1.6rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .panel-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-cyber {
+            background: var(--brand-cyber);
+            color: #050508;
+            border: none;
+            padding: 12px 25px;
+            font-size: 0.95rem;
+            font-weight: 900;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+        }
+        
+        .btn-danger {
+            background: var(--brand-danger);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(ff, 8, 68, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #00f2fe;
+            border: 2px solid #00f2fe;
+            box-shadow: none;
+        }
+
+        /* 排行榜與輸入框專屬樣式 */
+        .record-input-group {
+            display: none; /* 預設隱藏，破紀錄才顯示 */
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+            width: 80%;
+        }
+
+        .name-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #00f2fe;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            text-align: center;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .name-input:focus {
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+        }
+
+        .leaderboard-list {
+            width: 90%;
+            max-height: 60%;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .rank-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            border-left: 4px solid transparent;
+        }
+
+        .rank-item.rank-1 { border-color: var(--brand-gold); background: rgba(255, 215, 0, 0.1); }
+        .rank-item.rank-2 { border-color: var(--brand-silver); background: rgba(192, 192, 192, 0.1); }
+        .rank-item.rank-3 { border-color: var(--brand-bronze); background: rgba(205, 127, 50, 0.1); }
+
+        .rank-info { display: flex; flex-direction: column; }
+        .rank-name { font-weight: 900; font-size: 1rem; color: #fff; }
+        .rank-level { font-size: 0.7rem; color: var(--text-secondary); }
+        .rank-score { font-weight: 900; font-size: 1.1rem; color: #00f2fe; }
+    </style>
+</head>
+<body>
+
+<div class="ad-banner">
+    [廣告版位 Top] 日後在此貼上 Google AdSense 代碼
+</div>
+
+<div class="game-container">
+    <header>
+        <h1>Meme Dodge PRO</h1>
+    </header>
+
+    <div class="dashboard">
+        <div class="dash-box">
+            <div class="dash-label">當前關卡</div>
+            <div class="dash-value">Lv.<span id="ui-level">1</span></div>
+        </div>
+        <div class="dash-box">
+            <div class="dash-label">核心生命</div>
+            <div class="dash-value" id="ui-lives">❤️❤️❤️</div>
+        </div>
+        <div class="dash-box">
+            <div class="dash-label">存活時間</div>
+            <div class="dash-value" id="current-score">0.00s</div>
+        </div>
+    </div>
+
+    <div class="stage-area">
+        <canvas id="cyberCanvas" width="600" height="600"></canvas>
+
+        <div class="panel-overlay" id="menu-panel">
+            <h2 class="panel-title" style="color: #00f2fe;">賽博演算法對決</h2>
+            <p class="panel-desc">點擊空白處可【瞬移閃現】。<br>你有 3 條命，每 10 秒提升一級難度！</p>
+            <div class="btn-group">
+                <button class="btn-cyber" id="btn-start">啟動系統</button>
+                <button class="btn-cyber btn-outline" id="btn-show-lb">排行榜</button>
+            </div>
+        </div>
+
+        <div class="panel-overlay" id="leaderboard-panel" style="display: none;">
+            <h2 class="panel-title" style="color: #ffca28;">🏆 英雄榜 Top 5</h2>
+            <div class="leaderboard-list" id="lb-list">
+                </div>
+            <button class="btn-cyber" id="btn-close-lb">返回主選單</button>
+        </div>
+
+        <div class="panel-overlay" id="over-panel" style="display: none;">
+            <h2 class="panel-title" style="color: #ff3366;">💥 生命值歸零</h2>
+            <p class="panel-desc" id="over-perf">核心數據崩潰</p>
+            
+            <div class="record-input-group" id="record-input-area">
+                <p style="color:#00e676; font-weight:900; font-size:0.9rem;">🎉 打破紀錄！進入 Top 5！</p>
+                <input type="text" id="player-name" class="name-input" placeholder="輸入你的大名 (最長8字)" maxlength="8" autocomplete="off">
+                <button class="btn-cyber" id="btn-save-record">儲存成績並重玩</button>
+            </div>
+
+            <div class="btn-group" id="normal-restart-area">
+                <button class="btn-cyber btn-danger" id="btn-restart">重新初始化</button>
+                <button class="btn-cyber btn-outline" id="btn-over-lb">查看排行</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="ad-banner">
+    [廣告版位 Bottom] 支援響應式橫幅廣告
+</div>
+
+<script>
+    const canvas = document.getElementById('cyberCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // UI 面板
+    const menuPanel = document.getElementById('menu-panel');
+    const overPanel = document.getElementById('over-panel');
+    const lbPanel = document.getElementById('leaderboard-panel');
+    const lbList = document.getElementById('lb-list');
+    const recordInputArea = document.getElementById('record-input-area');
+    const normalRestartArea = document.getElementById('normal-restart-area');
+    const overPerf = document.getElementById('over-perf');
+    const playerNameInput = document.getElementById('player-name');
+    
+    // 按鈕
+    const btnStart = document.getElementById('btn-start');
+    const btnRestart = document.getElementById('btn-restart');
+    const btnShowLb = document.getElementById('btn-show-lb');
+    const btnCloseLb = document.getElementById('btn-close-lb');
+    const btnOverLb = document.getElementById('btn-over-lb');
+    const btnSaveRecord = document.getElementById('btn-save-record');
+    
+    // 狀態數值 UI
+    const currentScoreEl = document.getElementById('current-score');
+    const uiLevel = document.getElementById('ui-level');
+    const uiLives = document.getElementById('ui-lives');
+
+    // --- 排行榜核心系統 ---
+    const MAX_LB_SIZE = 5;
+    let leaderboard = JSON.parse(localStorage.getItem('meme_pro_leaderboard_v1')) || [];
+
+    function renderLeaderboard() {
+        lbList.innerHTML = '';
+        if (leaderboard.length === 0) {
+            lbList.innerHTML = '<p style="color:#7e7e9a; text-align:center;">尚無神人紀錄，趕快搶下第一名！</p>';
+            return;
+        }
+
+        leaderboard.forEach((entry, index) => {
+            const rank = index + 1;
+            let rankClass = rank <= 3 ? `rank-${rank}` : '';
+            let medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+            
+            lbList.innerHTML += `
+                <div class="rank-item ${rankClass}">
+                    <div class="rank-info">
+                        <span class="rank-name">${medal} ${entry.name}</span>
+                        <span class="rank-level">最高關卡: Lv.${entry.level}</span>
+                    </div>
+                    <span class="rank-score">${entry.score.toFixed(2)}s</span>
+                </div>
+            `;
+        });
+    }
+
+    function checkIsTopRecord(finalScore) {
+        if (leaderboard.length < MAX_LB_SIZE) return true;
+        return finalScore > leaderboard[leaderboard.length - 1].score;
+    }
+
+    function saveToLeaderboard(name, finalScore, finalLevel) {
+        const safeName = name.trim() || '無名英雄';
+        leaderboard.push({ name: safeName, score: finalScore, level: finalLevel });
+        // 依照分數由高到低排序
+        leaderboard.sort((a, b) => b.score - a.score);
+        // 只保留前 5 名
+        if (leaderboard.length > MAX_LB_SIZE) leaderboard = leaderboard.slice(0, MAX_LB_SIZE);
+        localStorage.setItem('meme_pro_leaderboard_v1', JSON.stringify(leaderboard));
+    }
+
+    // 面板切換事件
+    btnShowLb.addEventListener('click', () => {
+        menuPanel.style.display = 'none';
+        renderLeaderboard();
+        lbPanel.style.display = 'flex';
+    });
+    btnOverLb.addEventListener('click', () => {
+        overPanel.style.display = 'none';
+        renderLeaderboard();
+        lbPanel.style.display = 'flex';
+    });
+    btnCloseLb.addEventListener('click', () => {
+        lbPanel.style.display = 'none';
+        // 如果遊戲還沒開始就回主選單，不然其實也可以設計直接重玩
+        menuPanel.style.display = 'flex'; 
+    });
+
+    // 遊戲圖片
+    const playerImg = new Image();
+    let imgLoaded = false;
+    playerImg.onload = () => { imgLoaded = true; };
+    playerImg.src = 'senku-eminem.jpg';
+
+    // 遊戲變數
+    let isPlaying = false;
+    let score = 0;
+    let level = 1;
+    let lives = 3;
+    let levelUpTimer = 0;
+
+    let player = {
+        x: 300, y: 300,
+        targetX: 300, targetY: 300,
+        vx: 0, vy: 0,
+        radius: 26, hitRadius: 8,
+        invincibleUntil: 0,
+        dashCooldownUntil: 0, dashCDDuration: 2000
+    };
+
+    let enemies = [];
+    let particles = []; 
+    let gameStartTime = 0;
+    let lastSpawnTime = 0;
+
+    function getEventCoords(clientX, clientY) {
+        const rect = canvas.getBoundingClientRect();
+        return {
+            x: ((clientX - rect.left) / rect.width) * canvas.width,
+            y: ((clientY - rect.top) / rect.height) * canvas.height
+        };
+    }
+
+    function triggerDash(clientX, clientY) {
+        if (!isPlaying) return;
+        const now = performance.now();
+        if (now < player.dashCooldownUntil) return;
+
+        const coords = getEventCoords(clientX, clientY);
+        createExplosion(player.x, player.y, '#00f2fe', 15);
+        player.x = coords.x; player.y = coords.y;
+        player.targetX = coords.x; player.targetY = coords.y;
+        player.vx = 0; player.vy = 0;
+        player.invincibleUntil = now + 250; 
+        player.dashCooldownUntil = now + player.dashCDDuration;
+        createExplosion(player.x, player.y, '#ffffff', 15);
+    }
+
+    function createExplosion(x, y, color, count) {
+        for(let i=0; i<count; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 1 + Math.random() * 5;
+            particles.push({
+                x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+                radius: 2 + Math.random() * 4, color, alpha: 1, decay: 0.02 + Math.random() * 0.03
+            });
+        }
+    }
+
+    // 控制監聽
+    canvas.addEventListener('mousedown', (e) => {
+        if(!isPlaying) return;
+        const coords = getEventCoords(e.clientX, e.clientY);
+        if(Math.hypot(player.x - coords.x, player.y - coords.y) > 50) triggerDash(e.clientX, e.clientY);
+    });
+    canvas.addEventListener('mousemove', (e) => {
+        if (!isPlaying) return;
+        const coords = getEventCoords(e.clientX, e.clientY);
+        if (Math.hypot(player.x - coords.x, player.y - coords.y) < 200) {
+            player.targetX = coords.x; player.targetY = coords.y;
+        }
+    });
+    canvas.addEventListener('touchstart', (e) => {
+        if (!isPlaying || e.touches.length === 0) return;
+        const touch = e.touches[0];
+        const coords = getEventCoords(touch.clientX, touch.clientY);
+        if (Math.hypot(player.x - coords.x, player.y - coords.y) > 60) {
+            triggerDash(touch.clientX, touch.clientY);
+        } else {
+            player.targetX = coords.x; player.targetY = coords.y;
+        }
+    });
+    canvas.addEventListener('touchmove', (e) => {
+        if (!isPlaying || e.touches.length === 0) return;
+        const coords = getEventCoords(e.touches[0].clientX, e.touches[0].clientY);
+        player.targetX = coords.x; player.targetY = coords.y;
+    });
+
+    function updateLivesDisplay() {
+        let hearts = "";
+        for(let i=0; i<3; i++) hearts += (i < lives) ? "❤️" : "🖤";
+        uiLives.textContent = hearts;
+    }
+
+    btnStart.addEventListener('click', actionInitialize);
+    btnRestart.addEventListener('click', actionInitialize);
+    
+    // 儲存紀錄並重新開始
+    btnSaveRecord.addEventListener('click', () => {
+        saveToLeaderboard(playerNameInput.value, score, level);
+        actionInitialize();
+    });
+
+    function actionInitialize() {
+        menuPanel.style.display = 'none';
+        overPanel.style.display = 'none';
+        lbPanel.style.display = 'none';
+        playerNameInput.value = ''; // 清空輸入框
+
+        isPlaying = true;
+        score = 0; level = 1; lives = 3;
+        uiLevel.textContent = level;
+        updateLivesDisplay();
+        
+        enemies = []; particles = [];
+        player.x = 300; player.y = 300;
+        player.targetX = 300; player.targetY = 300;
+        player.vx = 0; player.vy = 0;
+
+        const now = performance.now();
+        gameStartTime = now; lastSpawnTime = now;
+        player.invincibleUntil = now + 2500; 
+
+        requestAnimationFrame(gameLoop);
+    }
+
+    function actionExecuteGameOver() {
+        isPlaying = false;
+        createExplosion(player.x, player.y, '#ff3366', 50); 
+        
+        setTimeout(() => {
+            overPerf.innerHTML = `達陣 <strong style="color:#ffca28;">Lv.${level}</strong><br>存活時間：<strong style="color:#00f2fe;">${score.toFixed(2)} 秒</strong>！`;
+            
+            // 判斷是否破紀錄
+            if (checkIsTopRecord(score)) {
+                recordInputArea.style.display = 'flex';
+                normalRestartArea.style.display = 'none';
+                playerNameInput.focus(); // 自動聚焦輸入框
+            } else {
+                recordInputArea.style.display = 'none';
+                normalRestartArea.style.display = 'flex';
+            }
+
+            overPanel.style.display = 'flex';
+        }, 800);
+    }
+
+    function spawnCyberEnemy() {
+        let x, y;
+        const side = Math.floor(Math.random() * 4);
+        if (side === 0) { x = Math.random() * canvas.width; y = -20; }
+        else if (side === 1) { x = canvas.width + 20; y = Math.random() * canvas.height; }
+        else if (side === 2) { x = Math.random() * canvas.width; y = canvas.height + 20; }
+        else { x = -20; y = Math.random() * canvas.height; }
+
+        const angle = Math.atan2(player.y - y, player.x - x) + (Math.random() * 0.3 - 0.15);
+        const baseSpeed = 2.0 + (level * 0.4);
+        const speed = baseSpeed + Math.random() * 2.5;
+        const radius = 6 + Math.random() * (8 + level);
+        const colors = ['#ff0844', '#00f2fe', '#00e676', '#ffb199', '#fbc2eb'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+
+        enemies.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, radius, color });
+    }
+
+    function gameLoop(timestamp) {
+        if (!isPlaying) {
+            ctx.fillStyle = '#050508';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            renderParticles();
+            if(particles.length > 0) requestAnimationFrame(gameLoop);
+            return;
+        }
+
+        score = (timestamp - gameStartTime) / 1000;
+        currentScoreEl.textContent = score.toFixed(2) + 's';
+
+        let expectedLevel = Math.floor(score / 10) + 1;
+        if (expectedLevel > level) {
+            level = expectedLevel;
+            uiLevel.textContent = level;
+            levelUpTimer = timestamp + 2000;
+            createExplosion(player.x, player.y, '#ffca28', 25);
+        }
+
+        ctx.fillStyle = 'rgba(5, 5, 8, 0.25)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const now = timestamp;
+        const isInvincible = now < player.invincibleUntil;
+        const spawnInterval = Math.max(60, 350 - (level * 25));
+        
+        if (now - lastSpawnTime > spawnInterval) {
+            spawnCyberEnemy();
+            lastSpawnTime = now;
+        }
+
+        player.vx += (player.targetX - player.x) * 0.08;
+        player.vy += (player.targetY - player.y) * 0.08;
+        player.vx *= 0.75; player.vy *= 0.75;
+        player.x += player.vx; player.y += player.vy;
+
+        if (player.x < player.radius) player.x = player.radius;
+        if (player.x > canvas.width - player.radius) player.x = canvas.width - player.radius;
+        if (player.y < player.radius) player.y = player.radius;
+        if (player.y > canvas.height - player.radius) player.y = canvas.height - player.radius;
+
+        renderParticles();
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
+        ctx.clip();
+        if (imgLoaded) {
+            if (isInvincible && Math.floor(now / 100) % 2 === 0) ctx.globalAlpha = 0.5;
+            ctx.drawImage(playerImg, player.x - player.radius, player.y - player.radius, player.radius * 2, player.radius * 2);
+        } else {
+            let grad = ctx.createRadialGradient(player.x, player.y, 2, player.x, player.y, player.radius);
+            grad.addColorStop(0, '#ffffff'); grad.addColorStop(1, '#00f2fe');
+            ctx.fillStyle = grad; ctx.fill();
+        }
+        ctx.restore();
+
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, player.radius + 3, 0, Math.PI * 2);
+        if (isInvincible) {
+            ctx.strokeStyle = `rgba(0, 242, 254, ${0.5 + Math.sin(now/40)*0.4})`;
+            ctx.lineWidth = 3; ctx.stroke();
+        }
+
+        let cdProgress = 1;
+        if (now < player.dashCooldownUntil) {
+            cdProgress = 1 - ((player.dashCooldownUntil - now) / player.dashCDDuration);
+        }
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, player.radius + 7, -Math.PI/2, (-Math.PI/2) + (Math.PI * 2 * cdProgress));
+        ctx.strokeStyle = cdProgress === 1 ? '#00e676' : '#00f2fe';
+        ctx.lineWidth = 2; ctx.stroke();
+
+        for (let i = enemies.length - 1; i >= 0; i--) {
+            let e = enemies[i];
+            e.x += e.vx; e.y += e.vy;
+
+            ctx.beginPath();
+            ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+            ctx.fillStyle = e.color; ctx.fill();
+
+            if (Math.random() < 0.15) {
+                particles.push({
+                    x: e.x, y: e.y, vx: 0, vy: 0, radius: e.radius * 0.3, color: e.color, alpha: 0.6, decay: 0.04
+                });
+            }
+
+            if (!isInvincible) {
+                const dist = Math.hypot(player.x - e.x, player.y - e.y);
+                if (dist < player.hitRadius + e.radius) {
+                    lives--;
+                    updateLivesDisplay();
+                    createExplosion(player.x, player.y, '#ff3366', 25);
+                    
+                    if (lives <= 0) {
+                        actionExecuteGameOver();
+                        return;
+                    } else {
+                        player.invincibleUntil = now + 2000;
+                        enemies.splice(i, 1);
+                        continue;
+                    }
+                }
+            }
+
+            if (e.x < -40 || e.x > canvas.width + 40 || e.y < -40 || e.y > canvas.height + 40) {
+                enemies.splice(i, 1);
+            }
+        }
+
+        if (now < levelUpTimer) {
+            ctx.fillStyle = `rgba(255, 202, 40, ${Math.abs(Math.sin(now / 150))})`; 
+            ctx.font = '900 36px "Plus Jakarta Sans"';
+            ctx.textAlign = 'center';
+            ctx.fillText(`LEVEL ${level}!`, canvas.width / 2, canvas.height / 4);
+        }
+
+        requestAnimationFrame(gameLoop);
+    }
+
+    function renderParticles() {
+        for (let i = particles.length - 1; i >= 0; i--) {
+            let p = particles[i];
+            p.x += p.vx; p.y += p.vy;
+            p.alpha -= p.decay;
+
+            if (p.alpha <= 0) {
+                particles.splice(i, 1);
+                continue;
+            }
+            ctx.save();
+            ctx.globalAlpha = p.alpha;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = p.color; ctx.fill();
+            ctx.restore();
+        }
+    }
+</script>
+
+</body>
+</html>
